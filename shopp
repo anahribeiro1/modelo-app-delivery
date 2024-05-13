@@ -1,0 +1,53 @@
+import 'package:flutter/material.dart';
+
+class ShoppingCartScreen extends StatefulWidget {
+  final List<Item> shoppingCart;
+  final void Function(Item) onRemoveFromCart;
+
+  ShoppingCartScreen({
+    required this.shoppingCart,
+    required this.onRemoveFromCart
+    });
+
+  @override
+  _ShoppingCartScreenState createState() => _ShoppingCartScreenState();
+}
+
+class _ShoppingCartScreenState extends State<ShoppingCartScreen> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text('Shopping Cart')),
+      body: ListView.builder(
+        itemCount: widget.shoppingCart.length,
+        itemBuilder: (context, index) {
+          final item = widget.shoppingCart[index];
+          return ListTile(
+            leading: Image.asset(item.image, width: 50),
+            title: Text(item.name),
+            subtitle: Text('${item.price}'),
+            trailing: IconButton(
+              icon: Icon(Icons.remove_shopping_cart),
+              onPressed: () {
+                widget.onRemoveFromCart(item);
+              },
+            ),
+          );
+        },
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => CheckoutScreen(
+                shoppingCart: widget.shoppingCart,
+              ),
+            ),
+          );
+        },
+        child: Icon(Icons.payment),
+      ),
+    );
+  }
+}
