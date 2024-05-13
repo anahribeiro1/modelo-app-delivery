@@ -1,0 +1,66 @@
+import 'package:flutter/material.dart';
+
+class ItemsScreen extends StatefulWidget {
+  @override
+  _ItemsScreenState createState() => _ItemsScreenState();
+}
+
+class _ItemsScreenState extends State<ItemsScreen> {
+  List<Item> _items = [
+    Item(name: 'Item 1', image: 'image1.jpg', price: 10.0),
+    Item(name: 'Item 2', image: 'image2.jpg', price: 20.0),
+    Item(name: 'Item 3', image: 'image3.jpg', price: 30.0),
+  ];
+
+  List<Item> _shoppingCart = [];
+
+  void _addToCart(Item item) {
+    setState(() {
+      _shoppingCart.add(item);
+    });
+  }
+
+  void _removeFromCart(Item item) {
+    setState(() {
+      _shoppingCart.remove(item);
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text('Items')),
+      body: ListView.builder(
+        itemCount: _items.length,
+        itemBuilder: (context, index) {
+          final item = _items[index];
+          return ListTile(
+            leading: Image.asset(item.image, width: 50),
+            title: Text(item.name),
+            subtitle: Text('${item.price}'),
+            trailing: IconButton(
+              icon: Icon(Icons.add_shopping_cart),
+              onPressed: () {
+                _addToCart(item);
+              },
+            ),
+          );
+        },
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => ShoppingCartScreen(
+                shoppingCart: _shoppingCart,
+                onRemoveFromCart: _removeFromCart,
+              ),
+            ),
+          );
+        },
+        child: Icon(Icons.shopping_cart),
+      ),
+    );
+  }
+}
